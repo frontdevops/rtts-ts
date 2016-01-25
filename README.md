@@ -1,4 +1,4 @@
-# base-decorators TypeScript version
+#RTTS-TS
 Library of TypeScript decorators for RunTime Type System with decorators type annotations
 
 # Type Annotations
