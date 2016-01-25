@@ -20,5 +20,7 @@
   "bugs": {
     "url": "https://github.com/i0z/rtts-ts/issues"
   },
-  "homepage": "https://github.com/i0z/rtts-ts#readme"
+  "homepage": "https://github.com/i0z/rtts-ts#readme",
+  "dependencies": {
+  }
 }
