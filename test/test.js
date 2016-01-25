@@ -7,32 +7,30 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-///<require path="../rtts.d.ts" />
+///<reference path="../rtts.d.ts" />
 require('./../rtts');
 var A = (function () {
     function A() {
-        this.foo = 1.1;
+        this.foo = '1.1';
     }
-    A.prototype.baz = function (x, y) {
-        return x + y;
+    //@tstring static bar :string= 'abc';
+    //@type baz(@tint x :int, @tfloat y :float) {return x + y;}
+    A.prototype.doany = function (x) {
+        console.log(x);
     };
-    A.bar = 'abc';
     __decorate([
-        tfloat
+        cast('int')
     ], A.prototype, "foo", void 0);
     __decorate([
         type,
-        __param(0, tint),
-        __param(1, tfloat)
-    ], A.prototype, "baz", null);
-    __decorate([
-        tstring
-    ], A, "bar", void 0);
+        __param(0, cast('int'))
+    ], A.prototype, "doany", null);
     return A;
 })();
 var a1 = new A;
+a1.doany('123abc');
 //a1.foo = 'abc';
 console.log(a1.foo);
 //A.bar = 123;
-console.log(A.bar);
-console.log(a1.baz(10, 8.4));
+//console.log(A.bar);
+//console.log(a1.baz(10, 8.4));

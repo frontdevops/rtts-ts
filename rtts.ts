@@ -44,24 +44,40 @@ namespace Rtts {
 		return typeDecorator(target, key, descriptor, 'number')
 	}
 
-	export function typeDecorator(target :any, key :string, descriptor :Object|number, t :string) {
-		checkIfCallFromProperty(descriptor);
-		if (isParameter(target, key, descriptor, t)) return;
-		return checkPType(target, key, t);
+
+	export function cast(type :string) :any {
+		return function(target :any, key :string, descriptor? :Object|number) {
+			return typeDecorator(target, key, descriptor, 'cast_' + type)
+		}
 	}
 
-	export function type(target, key :string, descriptor:any) :any {
+	export function type(target, key? :string, descriptor?:any) :any {
 
-		var indices = target.__meta__[key],
-			method = descriptor.value,
+		var isConstruct = isClass(target, key),
+			method;
+
+		if (isConstruct) key = 'constructor';
+
+		let indices = target.__meta__[key],
 			cls = target.constructor.name;
 
-		descriptor.value = function (...args:any[]) :any {
-			indices.forEach( (type, i) => checkType(args[i], typeof args[i], type, key, cls) );
-			return method.apply(this, args);
-		};
+		if (isConstruct) {
+			//method = target.constructor;
+			console.warn('In constructor types not checked at runtime in this version. Sorry!');
+		}
+		else {
+			method = descriptor.value;
 
-		return descriptor;
+			descriptor.value = function (...args:any[]) :any {
+				indices.forEach( (type, i) => {
+					let cr = checkType(args[i], typeof args[i], type, key, cls);
+					if (cr !== void 0) args[i] = cr;
+				});
+				return method.apply(this, args);
+			};
+
+			return descriptor;
+		}
 	}
 
 
@@ -70,6 +86,26 @@ namespace Rtts {
 	 * ===============
 	 */
 	function isFloat(n :any) :boolean { return n === +n && n !== (n | 0) }
+
+	function isClass(target, key) :boolean {
+		if (key !== void 0) return false;
+		return true;
+	}
+
+	function isParameter(target, key :string, index :any = void 0, type) :boolean {
+		if (index !== +index) return false;
+		if (key === void 0) key = 'constructor';
+		if (!target.__meta__) target.__meta__ = {};
+		if (!target.__meta__[key]) target.__meta__[key] = [];
+		target.__meta__[key][index] = type;
+		return true;
+	}
+
+	function typeDecorator(target :any, key :string, descriptor :Object|number, t :string) {
+		checkIfCallFromProperty(descriptor);
+		if (isParameter(target, key, descriptor, t)) return;
+		return checkPType(target, key, t);
+	}
 
 	function checkIfCallFromProperty(descriptor) :void {
 		if (descriptor === void 0 || typeof descriptor == 'number') return;
@@ -93,8 +129,8 @@ namespace Rtts {
 
 		return {
 			set: function (val) {
-				checkType(val, typeof val, type, key, cls);
-				_target['__meta__' + key] = val;
+				let cr = checkType(val, typeof val, type, key, cls);
+				_target['__meta__' + key] = cr !== void 0 ? cr : val;
 			},
 			get: function () {
 				if (isStatic)
@@ -105,15 +141,7 @@ namespace Rtts {
 		}
 	}
 
-	function isParameter(target, key :string, index :any = void 0, type) :boolean {
-		if (index !== +index) return false;
-		if (!target.__meta__) target.__meta__ = {};
-		if (!target.__meta__[key]) target.__meta__[key] = [];
-		target.__meta__[key][index] = type;
-		return true;
-	}
-
-	function checkType(val :any, ctype :string, type :string, key :string, cls :string) :void {
+	function checkType(val :any, ctype :string, type :string, key :string, cls :string) :any {
 		var err = false;
 
 		switch (type) {
@@ -128,6 +156,8 @@ namespace Rtts {
 				err = !isFloat(val);
 				if (Number.isInteger(val)) ctype = 'integer';
 				break;
+			case 'cast_int': return parseInt(val);
+			case 'cast_float': return parseFloat(val);
 			default:
 				if (ctype !== type) err = true;
 		}

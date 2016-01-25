@@ -34,24 +34,37 @@ var Rtts;
         return typeDecorator(target, key, descriptor, 'number');
     }
     Rtts.tnumber = tnumber;
-    function typeDecorator(target, key, descriptor, t) {
-        checkIfCallFromProperty(descriptor);
-        if (isParameter(target, key, descriptor, t))
-            return;
-        return checkPType(target, key, t);
-    }
-    Rtts.typeDecorator = typeDecorator;
-    function type(target, key, descriptor) {
-        var indices = target.__meta__[key], method = descriptor.value, cls = target.constructor.name;
-        descriptor.value = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i - 0] = arguments[_i];
-            }
-            indices.forEach(function (type, i) { return checkType(args[i], typeof args[i], type, key, cls); });
-            return method.apply(this, args);
+    function cast(type) {
+        return function (target, key, descriptor) {
+            return typeDecorator(target, key, descriptor, 'cast_' + type);
         };
-        return descriptor;
+    }
+    Rtts.cast = cast;
+    function type(target, key, descriptor) {
+        var isConstruct = isClass(target, key), method;
+        if (isConstruct)
+            key = 'constructor';
+        var indices = target.__meta__[key], cls = target.constructor.name;
+        if (isConstruct) {
+            //method = target.constructor;
+            console.warn('In constructor types not checked at runtime in this version. Sorry!');
+        }
+        else {
+            method = descriptor.value;
+            descriptor.value = function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i - 0] = arguments[_i];
+                }
+                indices.forEach(function (type, i) {
+                    var cr = checkType(args[i], typeof args[i], type, key, cls);
+                    if (cr !== void 0)
+                        args[i] = cr;
+                });
+                return method.apply(this, args);
+            };
+            return descriptor;
+        }
     }
     Rtts.type = type;
     /**
@@ -59,6 +72,30 @@ var Rtts;
      * ===============
      */
     function isFloat(n) { return n === +n && n !== (n | 0); }
+    function isClass(target, key) {
+        if (key !== void 0)
+            return false;
+        return true;
+    }
+    function isParameter(target, key, index, type) {
+        if (index === void 0) { index = void 0; }
+        if (index !== +index)
+            return false;
+        if (key === void 0)
+            key = 'constructor';
+        if (!target.__meta__)
+            target.__meta__ = {};
+        if (!target.__meta__[key])
+            target.__meta__[key] = [];
+        target.__meta__[key][index] = type;
+        return true;
+    }
+    function typeDecorator(target, key, descriptor, t) {
+        checkIfCallFromProperty(descriptor);
+        if (isParameter(target, key, descriptor, t))
+            return;
+        return checkPType(target, key, t);
+    }
     function checkIfCallFromProperty(descriptor) {
         if (descriptor === void 0 || typeof descriptor == 'number')
             return;
@@ -75,8 +112,8 @@ var Rtts;
         }
         return {
             set: function (val) {
-                checkType(val, typeof val, type, key, cls);
-                _target['__meta__' + key] = val;
+                var cr = checkType(val, typeof val, type, key, cls);
+                _target['__meta__' + key] = cr !== void 0 ? cr : val;
             },
             get: function () {
                 if (isStatic)
@@ -85,17 +122,6 @@ var Rtts;
                 return _target['__meta__' + key];
             }
         };
-    }
-    function isParameter(target, key, index, type) {
-        if (index === void 0) { index = void 0; }
-        if (index !== +index)
-            return false;
-        if (!target.__meta__)
-            target.__meta__ = {};
-        if (!target.__meta__[key])
-            target.__meta__[key] = [];
-        target.__meta__[key][index] = type;
-        return true;
     }
     function checkType(val, ctype, type, key, cls) {
         var err = false;
@@ -113,6 +139,8 @@ var Rtts;
                 if (Number.isInteger(val))
                     ctype = 'integer';
                 break;
+            case 'cast_int': return parseInt(val);
+            case 'cast_float': return parseFloat(val);
             default:
                 if (ctype !== type)
                     err = true;
