@@ -25,16 +25,38 @@ Since the type errors should be caught and resolved before pushing the code to p
     ///<require path="rtts/typings.d.ts" />
     import 'rtts';
     
-    class SomeClass {
-      @tnumber public  foo :number = 123;
-      @tstring private bar :string = 'abc';
-      
-      @type add(@tint x :int, @tfloat y :float) :number {
-        return x + y;
-      }
-    }
+    @type // annotate constructor
+    class A {
     
-    let myFoo = new Foo;
-    myFoo.bar = 123; // Throw TypeError
-    myFoo.add(12.5, 10.1); // TypeError, first argument is not integer
-
+    	@tstring foo :string = 'abc';
+    	@tnumber static bar :number = 123;
+    
+    	@tfloat foo :float = 123.321;
+    	@tint   foo :int   = 123;
+    
+    
+    	/* @type */ constructor(@tnumber x :number) {
+    		// ...
+    	}
+    
+    	@type mixFoo(@tstring arg :string) :string {
+    		return this.foo + arg;
+    	}
+    
+    	@type mixBar(@cast('int') arg :any) :number {
+    		return this.bar + arg;
+    	}
+    
+    	@type({
+    		'arguments' : ['string', 'number'],
+    		'return'	: 'string'
+    	})
+    	someDo(a :string, b :number) :string {
+    		return a + b;
+    	}
+    
+        // return type string
+    	@type('string') static someDo(@tstring a :string, @tnumber b :number) :string {
+    		return a + b;
+    	}
+    }
