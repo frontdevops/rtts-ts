@@ -35,5 +35,6 @@ Since the type errors should be caught and resolved before pushing the code to p
     }
     
     let myFoo = new Foo;
-    myFoo.bar = 'abc'; // Throw TypeError
+    myFoo.bar = 123; // Throw TypeError
+    myFoo.add(12.5, 10.1); // TypeError, first argument is not integer
 
