@@ -1,0 +1,24 @@
+{
+  "name": "rtts-ts",
+  "version": "0.1.0",
+  "description": "A runtime type system library for TypeScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/i0z/rtts-ts.git"
+  },
+  "keywords": [
+    "rtts",
+    "runtime",
+    "types"
+  ],
+  "author": "Alexander Mayorov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/i0z/rtts-ts/issues"
+  },
+  "homepage": "https://github.com/i0z/rtts-ts#readme"
+}
