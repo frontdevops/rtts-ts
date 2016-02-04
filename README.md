@@ -43,7 +43,7 @@ Since the type errors should be caught and resolved before pushing the code to p
     		return this.foo + arg;
     	}
     
-    	@type mixBar(@cast('int') arg :any) :number {
+    	@type mixBar(@cast `int` arg :any) :number {
     		return this.bar + arg;
     	}
     
@@ -56,7 +56,7 @@ Since the type errors should be caught and resolved before pushing the code to p
     	}
     
         // return type string
-    	@type('string') static someDo(@tstring a :string, @tnumber b :number) :string {
+    	@type `string` static someDo(@tstring a :string, @tnumber b :number) :string {
     		return a + b;
     	}
     }
