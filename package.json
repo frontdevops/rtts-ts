@@ -1,27 +1,35 @@
 {
-  "name": "rtts-ts",
-  "version": "0.0.2",
-  "description": "A runtime type system library for TypeScript",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "echo 'Run build!!!!!!!!!!'"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/i0z/rtts-ts.git"
-  },
-  "keywords": [
-    "rtts",
-    "runtime",
-    "types"
-  ],
-  "author": "Alexander Mayorov",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/i0z/rtts-ts/issues"
-  },
-  "homepage": "https://github.com/i0z/rtts-ts#readme",
-  "dependencies": {
-  }
+    "name": "rtts-ts",
+    "version": "0.0.2",
+    "description": "A runtime type system library for TypeScript",
+    "main": "index.js",
+    "scripts": {
+        "test": "mocha -r ts-node/register test/*_test.ts",
+        "build": "tsc",
+        "install": "echo 'Run 'npm run build'!"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/i0z/rtts-ts.git"
+    },
+    "keywords": [
+        "rtts",
+        "runtime",
+        "types"
+    ],
+    "author": "Alexander Mayorov",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/i0z/rtts-ts/issues"
+    },
+    "homepage": "https://github.com/i0z/rtts-ts#readme",
+    "dependencies": {},
+    "devDependencies": {
+        "@types/chai": "^4.0.4",
+        "@types/mocha": "^2.2.43",
+        "chai": "^4.1.2",
+        "mocha": "^4.0.0",
+        "ts-node": "^3.3.0",
+        "typescript": "^2.5.3"
+    }
 }
