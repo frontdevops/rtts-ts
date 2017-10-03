@@ -6,7 +6,7 @@ import cast = Rtts.cast;
 export class RttsExample {
     @type
     static tnumberTest(@tnumber num: any) {
-       return num;
+        return num;
     }
 
     @type
