@@ -17,7 +17,7 @@ declare function tfloat(target :any, key :string, descriptor? :Object|number) :a
 
 declare function tnumber(target :any, key :string, descriptor? :Object|number) :any;
 
-declare function type(target, key :string, descriptor:any) :any;
+declare function type(target :any, key :string, descriptor:any) :any;
 
 
 declare function cast(type :string) :any;
