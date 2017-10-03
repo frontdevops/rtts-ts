@@ -2,9 +2,8 @@
   "compilerOptions": {
     "target": "es5",
     "noImplicitAny": true,
-    "sourceMap": false
-  },
-  "files": [
-    "rtts.ts"
-  ]
+    "sourceMap": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
+  }
 }
