@@ -194,12 +194,12 @@ namespace Rtts {
             for (f in Rtts) __global[f] = (<any>Rtts)[f];
         }
     })(
-        typeof window !== 'undefined'
+        typeof window !== void null
             ? window
-            : typeof WorkerGlobalScope !== 'undefined'
-            ? self
-            : typeof global !== 'undefined'
-                ? global
-                : Function('return this;')()
+            : typeof WorkerGlobalScope !== void null
+                ? self
+                : typeof global !== void null
+                    ? global
+                    : Function('return this;')()
     );
 }
