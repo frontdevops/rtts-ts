@@ -21,7 +21,7 @@ Runtime type verification can be used to verify that the JSON returned from the 
 Since the type errors should be caught and resolved before pushing the code to production, all of the assertions can be stripped from production builds, completely removing the cost of these assertions.
 
 ## Example usage RTTS Type Annotations
-
+```ts
     ///<require path="rtts/typings.d.ts" />
     import 'rtts';
     
@@ -60,3 +60,4 @@ Since the type errors should be caught and resolved before pushing the code to p
     		return a + b;
     	}
     }
+```
